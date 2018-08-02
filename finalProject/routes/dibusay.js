@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const {show, add, form, info, commentForm, addComment, editForm, update, destroy} = require('../controllers/dibusay');
+const {show, add, form, info, commentForm, addComment, editForm, update, destroy,test} = require('../controllers/dibusay');
 const isLogin = require('../helper/isLogin');
 const checkOwnership = require('../helper/checkOwnership');
 
@@ -12,6 +12,7 @@ router.get('/dibusay/:id', info);
 
 router.get('/dibusay/:id/comments/new', commentForm);
 router.post('/dibusay/:id/comments', addComment);
+router.get('/dibusay/search',test)
 
 router.get('/dibusay/:id/edit', editForm);
 router.post('/dibusay/:id/edit', checkOwnership, update);

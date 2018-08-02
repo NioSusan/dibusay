@@ -1,10 +1,24 @@
 const Food = require('../models').Food;
 const Comment = require('../models').Comment;
 const User = require('../models').User;
+const Tag = require('../models').Tag;
+const Sequelize = require('../models').Sequelize;
+const Op = Sequelize.Op
+
 module.exports={
     show : (req, res)=>{
+        console.log('NI ADALAH HASIL QUERY' , req.query.search)
+        let where = {}
+        if (req.query.search) {
+            where = {
+                name: {
+                    [Op.iLike]: '%'+req.query.search+'%'
+                }
+            }
+        }
         Food.findAll({
-            order:[['id', 'ASC']]
+            order:[['id', 'ASC']],
+            where: where
         })
         .then(foods=>{
             res.render('dibusay/index', {foods: foods, currentUser: req.session.current_user});
@@ -23,6 +37,7 @@ module.exports={
        let name = req.body.name;
        let image = req.body.image;
        let description = req.body.description;
+       let tags = req.body.tags
        let user = req.session.current_user;
         User.findOne({where:{username:user}})
             .then(user=>{
@@ -30,7 +45,10 @@ module.exports={
                     name : name,
                     image : image,
                     description : description,
-                    userId : user.id
+                    userId : user.id,
+                    Tags: tags
+                },{
+                    include: [Tag]
                 })
                 .then(newFood=>{
                     res.redirect('/dibusay')
@@ -122,7 +140,8 @@ module.exports={
             .catch(err=>{
                 res.redirect('/dibusay')
             })
-    }
+    },
 
-    
+    test: (req,res) =>{}
+
 }
