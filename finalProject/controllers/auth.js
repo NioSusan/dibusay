@@ -31,18 +31,18 @@ module.exports = {
     },
 
     login: (req, res) => {
-        console.log(req.body)
         User.findOne({
                 where: {
                     username: req.body.username
                 }
             })
             .then(user => {
-                let salt = crypto.createHash('md5').update(user.email).digest('hex') //should be email
+                if(user===null){
+                    res.redirect('/register')
+                }else{
+                    let salt = crypto.createHash('md5').update(user.email).digest('hex') //should be email
                 let combined = req.body.password + salt
                 let encryptedPassword = crypto.createHash('md5').update(combined).digest('hex')
-                console.log(salt)
-                console.log(combined)
                 User.findOne({
                         where: {
                             username: req.body.username, //it should be email
@@ -53,13 +53,14 @@ module.exports = {
                         if (user) {
                             req.session.current_user = req.body.username
                             res.redirect('/dibusay')
-                        } else {
+                        }else{
                             res.redirect('/register')
                         }
                     })
                     .catch(err => {
                         res.send('Uh-oh!Something is wrong')
                     })
+                }
             })
     },
 

@@ -6,6 +6,7 @@ const session = require('express-session');
 const indexRoutes = require('./routes/index');
 const dibusayRoutes = require('./routes/dibusay');
 const authRoutes = require('./routes/auth');
+const commentRoutes = require('./routes/comment');
 
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public")); 
@@ -25,6 +26,7 @@ app.use((req, res, next)=>{
 app.use(indexRoutes);
 app.use(authRoutes);
 app.use(dibusayRoutes);
+app.use(commentRoutes);
 
 
 app.listen(3000, () => { console.log("Server has started!!")});

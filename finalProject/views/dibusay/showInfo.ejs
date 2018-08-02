@@ -17,11 +17,18 @@
                     <h4 class="pull-right">Rp 10000/pax</h4>
                     <h4><a href=""><%=food.name%></a></h4>
                     <p><%=food.description%></p>
+                    <p>
+                        <em>Submitted By <%=food.User.username%></em>
+                    </p>
+                    <%if(currentUser===food.userId){%>
+                        <a class= "btn btn-warning" href="/dibusay/<%=food.id%>/edit">Edit</a>
+                        <a class= "btn btn-danger" href="/dibusay/<%=food.id%>/delete">Delete</a>
+                    <%}%>
                 </div>
             </div>
             <div class="well">
                 <div class="text-right">
-                    <a class= "btn btn-succes" href="<%=food.id%>/comments/new">Add New Comment</a>
+                    <a class= "btn btn-success" href="<%=food.id%>/comments/new">Add New Comment</a>
                 </div>
                 <hr>
                 <% food.Comments.forEach(comment=>{%> 
@@ -30,6 +37,10 @@
                            <strong><%=comment.author%></strong> 
                             <span class="pull-right">10 days ago</span>
                             <p><%=comment.text%></p>
+                            <%if(userName===comment.author){%>
+                            <a class="btn btn-xs btn-warning" href="/dibusay/<%=food.id%>/comments/<%=comment.id%>/edit">Edit</a>
+                            <a class="btn btn-xs btn-danger" href="/dibusay/<%=food.id%>/comments/<%=comment.id%>/delete">Delete</a>
+                            <%}%>
                         </div>
                     </div>
                 <%})%>

@@ -7,7 +7,8 @@ module.exports = (sequelize, DataTypes) => {
     email: DataTypes.STRING
   }, {});
   User.associate = function(models) {
-    // associations can be defined here
+    let Food = models.Food;
+    User.hasMany(Food,{foreignKey:"userId"})
   };
   return User;
 };
