@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Food.associate = function(models) {
     Food.hasMany(models.Comment, {foreignKey : "FoodId"})
+    Food.belongsToMany(models.Tag, { through: models.Foods_Tag });
   };
   return Food;
 };
