@@ -1,55 +1,69 @@
 const User = require('../models').User;
 const crypto = require('crypto');
 module.exports = {
-    register : (req, res)=>{
-       res.render('auth/register'); 
+    register: (req, res) => {
+        res.render('auth/register');
     },
 
-    signup : (req, res)=>{
+    signup: (req, res) => {
         let salt = crypto.createHash('md5').update(req.body.email).digest('hex')
-        let combined = req.body.password +salt
+        let combined = req.body.password + salt
         let encryptedPassword = crypto.createHash('md5').update(combined).digest('hex')
+        console.log(salt)
+        console.log(combined)
         User.create({
-            username: req.body.username,
-            password: encryptedPassword,
-            email : req.body.email,
-            salt:salt
+                username: req.body.username,
+                password: encryptedPassword,
+                email: req.body.email,
+                salt: salt
 
-        })
-        .then(user=>{
-            res.redirect('/login')
-        })
-        .catch(err=>{
-            res.send(err);
-        })
+            })
+            .then(user => {
+                res.redirect('/login')
+            })
+            .catch(err => {
+                res.send(err);
+            })
     },
 
-    loginForm : (req, res)=>{
+    loginForm: (req, res) => {
         res.render('auth/login')
     },
 
-    login : (req, res)=>{
-        let salt = crypto.createHash('md5').update(req.body.email).digest('hex') //should be email
-        let combined = req.body.password + salt
-        let encryptedPassword = crypto.createHash('md5').update(combined).digest('hex')
-        User.findOne({where:{
-                username: req.body.username, //it should be email
-                password: encryptedPassword
-        }})
-        .then(user=>{
-            if(user){
-                req.session.current_user = req.body.username
-                res.redirect('/dibusay')
-            }else{
-                res.redirect('/register')
-            }
-        })
-        .catch(err=>{
-            res.send('Uh-oh!Something is wrong')
-        })
+    login: (req, res) => {
+        console.log(req.body)
+        User.findOne({
+                where: {
+                    username: req.body.username
+                }
+            })
+            .then(user => {
+                let salt = crypto.createHash('md5').update(user.email).digest('hex') //should be email
+                let combined = req.body.password + salt
+                let encryptedPassword = crypto.createHash('md5').update(combined).digest('hex')
+                console.log(salt)
+                console.log(combined)
+                User.findOne({
+                        where: {
+                            username: req.body.username, //it should be email
+                            password: encryptedPassword
+                        }
+                    })
+                    .then(user => {
+                        if (user) {
+                            req.session.current_user = req.body.username
+                            res.redirect('/dibusay')
+                        } else {
+                            res.redirect('/register')
+                        }
+                    })
+                    .catch(err => {
+                        res.send('Uh-oh!Something is wrong')
+                    })
+            })
     },
 
-    logout: (req, res)=>{
+    logout: (req, res) => {
         req.session.current_user = null;
         res.redirect('/dibusay');
     }
