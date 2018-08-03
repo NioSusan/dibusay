@@ -11,6 +11,7 @@ function checkOwnership(req, res, next){
                         if(food.userId===user.id){
                            next()
                         }else{
+                            req.flash("error", "Oops! You're not allowed to do that =)")
                             res.redirect('/dibusay')
                         }
                     })

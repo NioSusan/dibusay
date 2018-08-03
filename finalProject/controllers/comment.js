@@ -28,6 +28,7 @@ module.exports={
     destroy : (req, res)=>{
         Comment.destroy({where:{id:req.params.comment_id}})
             .then(()=>{
+                req.flash("success", "Comment deleted!")
                 res.redirect(`/dibusay/${req.params.id}`)
             })
             .catch(err=>{

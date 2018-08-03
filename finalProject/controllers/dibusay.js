@@ -2,12 +2,13 @@ const Food = require('../models').Food;
 const Comment = require('../models').Comment;
 const User = require('../models').User;
 const Tag = require('../models').Tag;
+// const Models = require('../models');
+
 const Sequelize = require('../models').Sequelize;
 const Op = Sequelize.Op
 
 module.exports={
     show : (req, res)=>{
-        console.log('NI ADALAH HASIL QUERY' , req.query.search)
         let where = {}
         if (req.query.search) {
             where = {
@@ -35,6 +36,7 @@ module.exports={
 
     add : (req, res)=>{
        let name = req.body.name;
+       let price = req.body.price;
        let image = req.body.image;
        let description = req.body.description;
        let tags = req.body.tags
@@ -43,6 +45,7 @@ module.exports={
             .then(user=>{
                 Food.create({
                     name : name,
+                    price : price,
                     image : image,
                     description : description,
                     userId : user.id,
@@ -64,7 +67,7 @@ module.exports={
             .then(foundFood=>{
                 User.findOne({where:{username:req.session.current_user}})
                     .then(user=>{
-                        res.render('dibusay/showInfo', {food:foundFood,userName:req.session.current_user,currentUser: user.id})
+                        res.render('dibusay/showInfo', {food:foundFood,currentUser:req.session.current_user,currentUserId: user.id})
                     })
             })
             .catch(err=>{
@@ -92,8 +95,13 @@ module.exports={
                 })
                 .then(comment=>{
                     foundFood.addComment(comment)
+                    req.flash("sucess","Successfuly added comment")
                     res.redirect(`/dibusay/${id}`)
                 })
+            })
+            .catch(err=>{
+                req.flash("error", "Something went wrong")
+                res.send(err)
             })
     },   
 
@@ -105,7 +113,7 @@ module.exports={
                 User.findOne({where:{username:user}})
                     .then(user=>{
                         if(food.userId===user.id){
-                            res.render('dibusay/editForm')
+                            res.render('dibusay/editForm', {food:food})
                         }else{
                             res.redirect("back")
                         }
@@ -120,6 +128,7 @@ module.exports={
         let id = req.params.id;
         Food.update({
             name: req.body.name,
+            price: req.body.price,
             image: req.body.image,
             description: req.body.description
         },{where:{id:id}})
@@ -133,13 +142,23 @@ module.exports={
 
     destroy : (req, res)=>{
         let id = req.params.id;
-        Food.destroy({where:{id:id}})
-            .then(()=>{
+        Food.findById(id).then(food => {
+            food.destroy().then(() => {
+                req.flash("success", "Food deleted!")
                 res.redirect('/dibusay')
             })
-            .catch(err=>{
-                res.redirect('/dibusay')
-            })
+        }) .catch(err=>{
+            res.redirect('/dibusay')
+        })
+
+        // Food.destroy({where:{id:id}})
+        //     .then(()=>{
+        //         req.flash("success", "Food deleted!")
+        //         res.redirect('/dibusay')
+        //     })
+        //     .catch(err=>{
+        //         res.redirect('/dibusay')
+        //     })
     },
 
     test: (req,res) =>{}

@@ -14,7 +14,7 @@ router.get('/dibusay/:id/comments/new', commentForm);
 router.post('/dibusay/:id/comments', addComment);
 router.get('/dibusay/search',test)
 
-router.get('/dibusay/:id/edit', editForm);
+router.get('/dibusay/:id/edit',checkOwnership, editForm);
 router.post('/dibusay/:id/edit', checkOwnership, update);
 
 router.get('/dibusay/:id/delete', checkOwnership, destroy)

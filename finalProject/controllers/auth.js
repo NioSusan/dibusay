@@ -9,8 +9,7 @@ module.exports = {
         let salt = crypto.createHash('md5').update(req.body.email).digest('hex')
         let combined = req.body.password + salt
         let encryptedPassword = crypto.createHash('md5').update(combined).digest('hex')
-        console.log(salt)
-        console.log(combined)
+    
         User.create({
                 username: req.body.username,
                 password: encryptedPassword,
@@ -19,10 +18,11 @@ module.exports = {
 
             })
             .then(user => {
+                req.flash("success", `Nice to meet you, ${user.username}`)
                 res.redirect('/login')
             })
             .catch(err => {
-                res.send(err);
+                res.render("auth/register", {error: err.message});
             })
     },
 
@@ -52,6 +52,7 @@ module.exports = {
                         .then(user => {
                             if (user) {
                                 req.session.current_user = req.body.username
+                                req.flash("success", "Welcome to Dibusay!")
                                 res.redirect('/dibusay')
                             } else {
                                 res.redirect('/register')
@@ -66,6 +67,6 @@ module.exports = {
 
     logout: (req, res) => {
         req.session.current_user = null;
-        res.redirect('/dibusay');
+        res.redirect('/');
     }
 }

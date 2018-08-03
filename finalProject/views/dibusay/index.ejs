@@ -8,13 +8,16 @@
                 <p>
                     <a class="btn btn-primary btn-lg" href="/dibusay/new">Add New Food</a>
                 </p>
+                <p>
+                    <form action="/dibusay" method="GET" class="form-inline">
+                        <div class="form-group">
+                            <input class="form-control" type="text" name="search" placeholder="Bon Appetit ...">
+                            <input class="btn btn-default" type="submit" value="search">
+                        </div>
+                     </form>
+                </p>
         </div>
     </header>
-
-    <form action="/dibusay" method="GET">
-        <input type="text" name="search">
-        <button type="submit">search</button>
-    </form>
 
     <div class="row text-center" style="display: flex; flex-wrap: wrap;">
         <% foods.forEach(food=>{%>
