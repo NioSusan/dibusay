@@ -1,6 +1,5 @@
 const express = require('express');
 const app = express();
-const port = process.env.PORT || 4000;
 const session = require('express-session');
 const flash = require('connect-flash');
 
@@ -34,4 +33,4 @@ app.use(dibusayRoutes);
 app.use(commentRoutes);
 
 
-app.listen(port, () => { console.log("Server has started!!")});
+app.listen(process.env.PORT || 5000);
