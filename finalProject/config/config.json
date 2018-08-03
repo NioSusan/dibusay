@@ -1,8 +1,8 @@
 {
   "development": {
-    "username": "windra",
-    "password": "123456",
-    "database": "dibusay_development",
+    "username": "postgres",
+    "password": "postgres",
+    "database": "dibusay_deploy",
     "host": "127.0.0.1",
     "dialect": "postgres",
     "operatorAliases": false
