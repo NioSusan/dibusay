@@ -14,3 +14,7 @@
     width: 50%;
     height: 500px;
 }
+
+.list-group-item a{
+    color: black;
+}

@@ -2,14 +2,13 @@ const Food = require('../models').Food;
 const Comment = require('../models').Comment;
 const User = require('../models').User;
 const Tag = require('../models').Tag;
-// const Models = require('../models');
-
 const Sequelize = require('../models').Sequelize;
 const Op = Sequelize.Op
 
 module.exports={
     show : (req, res)=>{
         let where = {}
+        let include = []
         if (req.query.search) {
             where = {
                 name: {
@@ -17,12 +16,26 @@ module.exports={
                 }
             }
         }
+        if (req.query.tags){
+            include = [{
+                model: Tag,
+                where: {id: req.query.tags}
+            }]
+
+        }
         Food.findAll({
             order:[['id', 'ASC']],
-            where: where
+            where: where,
+            include: include
         })
         .then(foods=>{
-            res.render('dibusay/index', {foods: foods, currentUser: req.session.current_user});
+            Tag.findAll({
+                
+            })
+            .then(tags=>{
+                res.render('dibusay/index', {foods: foods, currentUser: req.session.current_user,tags:tags});
+            })
+            
         })
         .catch(err=>{
             res.send(err.message);
@@ -31,7 +44,10 @@ module.exports={
     },
 
     form :  (req, res)=>{
-        res.render('dibusay/new')
+        Tag.findAll({})
+        .then(tags=>{
+            res.render('dibusay/new',{tags:tags})
+        })
     },
 
     add : (req, res)=>{
@@ -50,10 +66,9 @@ module.exports={
                     description : description,
                     userId : user.id,
                     Tags: tags
-                },{
-                    include: [Tag]
-                })
+                },{})
                 .then(newFood=>{
+                    newFood.addTags(tags)
                     res.redirect('/dibusay')
                 })
                 .catch(err=>{
@@ -78,7 +93,7 @@ module.exports={
     commentForm : (req, res)=>{
         Food.findById(req.params.id)
         .then(foundFood=>{
-            res.render("comments/new", {food:foundFood})
+            res.render("comments/new", {food:foundFood,currentUser:req.session.current_user})
         })
         .catch(err=>{
             res.send(err.message)

@@ -9,12 +9,28 @@
                     <a class="btn btn-primary btn-lg" href="/dibusay/new">Add New Food</a>
                 </p>
                 <p>
+                    <div style="display: flex">
                     <form action="/dibusay" method="GET" class="form-inline">
                         <div class="form-group">
                             <input class="form-control" type="text" name="search" placeholder="Bon Appetit ...">
                             <input class="btn btn-default" type="submit" value="search">
                         </div>
                      </form>
+
+                     <form action="/dibusay" method="GET" class="form-inline" style="margin: 0px 15px">
+                        <div class="input-group">
+                            <select class="custom-select" id="inputGroupSelect04" name="tags">
+                                <option selected>Category</option>
+
+                                <%tags.forEach(function(tag){%>
+                                        <option value="<%= tag.id%>"><%=tag.name%></option>
+                                <%})%>
+                            
+                            </select>
+                            <input class="btn btn-default" type="submit" value="search">
+                        </div>
+                    </form>
+                    </div>
                 </p>
         </div>
     </header>
