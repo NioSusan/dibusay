@@ -1,0 +1,53 @@
+<% include ../partials/header%>
+
+<div class='container'>
+    <header class="jumbotron">
+        <div class="container">
+                <h1>Welcome to Dibusay!</h1>
+                <p>View our yummy foods from all over Indonesia</p>
+                <p>
+                    <a class="btn btn-primary btn-lg" href="/dibusay/new">Add New Food</a>
+                </p>
+                <p>
+                    <div style="display: flex">
+                    <form action="/dibusay" method="GET" class="form-inline">
+                        <div class="form-group">
+                            <input class="form-control" type="text" name="search" placeholder="Bon Appetit ...">
+                            <input class="btn btn-default" type="submit" value="search">
+                        </div>
+                     </form>
+
+                     <form action="/dibusay" method="GET" class="form-inline" style="margin: 0px 15px">
+                        <div class="input-group">
+                            <select class="custom-select" id="inputGroupSelect04" name="tags">
+                                <option selected>Category</option>
+
+                                <%tags.forEach(function(tag){%>
+                                        <option value="<%= tag.id%>"><%=tag.name%></option>
+                                <%})%>
+                            
+                            </select>
+                            <input class="btn btn-default" type="submit" value="search">
+                        </div>
+                    </form>
+                    </div>
+                </p>
+        </div>
+    </header>
+
+    <div class="row text-center" style="display: flex; flex-wrap: wrap;">
+        <% foods.forEach(food=>{%>
+        <div class="col-md-3 col-sm-6">
+            <div class="thumbnail">
+                <img src="<%= food.image %>">
+                <div class="caption">
+                    <h4><%= food.name %></h4>
+                    <p><a href="/dibusay/<%=food.id%>" class="btn btn-primary">More Info</a></p>
+                </div>
+            </div>
+        </div>   
+         <%})%>
+    </div>
+</div>
+
+<% include ../partials/footer%>
